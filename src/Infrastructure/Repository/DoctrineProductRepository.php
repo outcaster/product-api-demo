@@ -15,7 +15,7 @@ readonly class DoctrineProductRepository implements ProductRepositoryInterface
     /**
      * @return Product[]
      */
-    public function findProducts(?string $category, ?int $priceLessThan): array
+    public function findProducts(?string $category, ?int $priceLessThan, int $page = 1, int $limit = 5): array
     {
         $qb = $this->entityManager->createQueryBuilder();
 
@@ -37,9 +37,10 @@ readonly class DoctrineProductRepository implements ProductRepositoryInterface
             $qb->andWhere('p.price <= :priceLessThan')
                 ->setParameter('priceLessThan', $priceLessThan);
         }
-
+        
         $qb->orderBy('p.price', 'ASC')
-            ->setMaxResults(5);
+            ->setMaxResults($limit)
+            ->setFirstResult(($page - 1) * $limit);
 
         $query = $qb->getQuery();
         $results = $query->getResult();

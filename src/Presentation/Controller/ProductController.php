@@ -12,23 +12,42 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ProductController extends AbstractController
 {
+    public const int DEFAULT_PAGE_SIZE = 5;
+    public const int DEFAULT_PAGE = 1;
+
     public function __construct(
         private readonly ProductListApplicationService $productListApplicationService,
     ) {}
 
     #[Route('/products', name: 'product_list', methods: ['GET'])]
-    public function list(Request $request): Response
+    public function __invoke(Request $request): Response
     {
-        $productQuery = new ProductQuery();
-        $productQuery->category = $request->query->get('category');
-        $priceLessThan = $request->query->get('priceLessThan');
-        if ($priceLessThan !== null) {
-            $productQuery->priceLessThan = (int) $priceLessThan;
-        }
+        $productQuery = $this->getProductQuery($request);
         $products = ($this->productListApplicationService)($productQuery);
 
         return $this->json(
             array_map(fn($product) => $product->toArray(new MoneyAdapter()), $products)
         );
+    }
+
+    public function getProductQuery(Request $request): ProductQuery
+    {
+        $productQuery = new ProductQuery();
+        $productQuery->category = $request->query->get('category');
+        $priceLessThan = $request->query->get('priceLessThan');
+        if ($priceLessThan !== null) {
+            $productQuery->priceLessThan = (int)$priceLessThan;
+        }
+
+        $productQuery->page = (int)$request->query->get(
+            'page',
+            self::DEFAULT_PAGE
+        );
+        $productQuery->limit = (int)$request->query->get(
+            'limit',
+            self::DEFAULT_PAGE_SIZE
+        );
+
+        return $productQuery;
     }
 }

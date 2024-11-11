@@ -13,6 +13,11 @@ readonly class ProductListApplicationService
 
     public function __invoke(ProductQuery $query): array
     {
-        return $this->productRepository->findProducts($query->category, $query->priceLessThan);
+        return $this->productRepository->findProducts(
+            $query->category,
+            $query->priceLessThan,
+            $query->page,
+            $query->limit
+        );
     }
 }

@@ -3,9 +3,12 @@
 namespace App\Domain\Entity;
 
 use App\Domain\Interfaces\MoneyInterface;
+use Doctrine\ORM\Mapping\Cache;
 
 class Product
 {
+    public const string CURRENCY = 'EUR';
+
     public function __construct(
         private string                  $sku,
         private string                  $name,
@@ -74,7 +77,7 @@ class Product
                 'original' => $this->getPrice(),
                 'final' => $this->getFinalPrice($moneyAdapter),
                 'discount_percentage' => $this->discountPercentage > 0 ? $this->discountPercentage . '%' : null,
-                'currency' => 'EUR'
+                'currency' => self::CURRENCY
             ]
         ];
     }
