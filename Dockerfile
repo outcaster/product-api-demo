@@ -68,6 +68,9 @@ RUN set -eux; \
 
 COPY --link frankenphp/conf.d/20-app.dev.ini $PHP_INI_DIR/app.conf.d/
 
+# Copy the fixtures
+COPY --link src/DataFixtures /app/src/DataFixtures
+
 CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile", "--watch" ]
 
 # Prod FrankenPHP image
@@ -96,9 +99,3 @@ RUN set -eux; \
 	composer dump-env prod; \
 	composer run-script --no-dev post-install-cmd; \
 	chmod +x bin/console; sync;
-
-# Copy the fixtures
-COPY --link src/DataFixtures /app/src/DataFixtures
-
-# Load the fixtures
-RUN php bin/console doctrine:fixtures:load --no-interaction --env=prod

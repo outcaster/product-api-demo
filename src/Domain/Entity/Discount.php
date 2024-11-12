@@ -24,7 +24,7 @@ class Discount
         $this->id = $id;
     }
 
-    public function getSku(): string
+    public function getSku(): ?string
     {
         return $this->sku;
     }
@@ -34,7 +34,7 @@ class Discount
         $this->sku = $sku;
     }
 
-    public function getCategory(): string
+    public function getCategory(): ?string
     {
         return $this->category;
     }

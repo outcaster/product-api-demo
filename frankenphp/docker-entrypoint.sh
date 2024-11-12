@@ -46,6 +46,8 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 			exit 1
 		else
 			echo "The database is now ready and reachable"
+			php bin/console doctrine:schema:create --no-interaction --env=dev
+            php bin/console doctrine:fixtures:load --no-interaction --env=dev
 		fi
 
 		if [ "$( find ./migrations -iname '*.php' -print -quit )" ]; then
