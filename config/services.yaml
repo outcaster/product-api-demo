@@ -30,5 +30,6 @@ services:
     App\Presentation\Listener\JsonExceptionListener:
         arguments:
             $environment: '%kernel.environment%'
+            $logger: '@logger'
         tags:
             - { name: kernel.event_listener, event: kernel.exception, priority: 0 }

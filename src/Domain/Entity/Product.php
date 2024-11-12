@@ -3,11 +3,10 @@
 namespace App\Domain\Entity;
 
 use App\Domain\Interfaces\MoneyInterface;
-use Doctrine\ORM\Mapping\Cache;
 
 class Product
 {
-    public const string CURRENCY = 'EUR';
+    public const CURRENCY = 'EUR';
 
     public function __construct(
         private string                  $sku,
