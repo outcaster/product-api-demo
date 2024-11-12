@@ -7,7 +7,7 @@ use App\Presentation\Controller\ProductController;
 use App\Presentation\Validation\QueryValidator;
 use Symfony\Component\HttpFoundation\Request;
 
-readonly class ProductQueryAdapter
+class ProductQueryAdapter
 {
     public function __construct(
         private QueryValidator $queryValidator

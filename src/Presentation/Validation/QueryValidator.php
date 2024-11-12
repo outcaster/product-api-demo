@@ -6,7 +6,7 @@ use App\Application\Query\ProductQuery;
 use App\Infrastructure\Exception\ValidationException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-readonly class QueryValidator
+class QueryValidator
 {
     public function __construct(
         private ValidatorInterface $validator

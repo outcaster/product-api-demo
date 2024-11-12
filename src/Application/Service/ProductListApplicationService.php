@@ -5,7 +5,7 @@ namespace App\Application\Service;
 use App\Application\Query\ProductQuery;
 use App\Domain\Repository\ProductRepositoryInterface;
 
-readonly class ProductListApplicationService
+class ProductListApplicationService
 {
     public function __construct(
         private ProductRepositoryInterface $productRepository
