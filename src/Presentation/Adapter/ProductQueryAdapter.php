@@ -24,11 +24,11 @@ class ProductQueryAdapter
 
         $productQuery->page = (int)$request->query->get(
             'page',
-            ProductController::DEFAULT_PAGE
+            (string)ProductController::DEFAULT_PAGE
         );
         $productQuery->limit = (int)$request->query->get(
             'limit',
-            ProductController::DEFAULT_PAGE_SIZE
+            (string)ProductController::DEFAULT_PAGE_SIZE
         );
 
         $this->queryValidator->validateProductQuery($productQuery);

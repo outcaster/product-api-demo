@@ -66,6 +66,9 @@ class Product
         $this->discountPercentage = $discountPercentage;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function toArray(MoneyInterface $moneyAdapter): array
     {
         return [

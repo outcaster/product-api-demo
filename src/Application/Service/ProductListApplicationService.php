@@ -3,6 +3,7 @@
 namespace App\Application\Service;
 
 use App\Application\Query\ProductQuery;
+use App\Domain\Entity\Product;
 use App\Domain\Repository\ProductRepositoryInterface;
 
 class ProductListApplicationService
@@ -11,6 +12,9 @@ class ProductListApplicationService
         private ProductRepositoryInterface $productRepository
     ) {}
 
+    /**
+     * @return array<Product>
+     */
     public function __invoke(ProductQuery $query): array
     {
         return $this->productRepository->findProducts(

@@ -15,7 +15,7 @@ readonly class DoctrineProductRepository implements ProductRepositoryInterface
     /**
      * @return Product[]
      */
-    public function findProducts(?string $category, ?int $priceLessThan, int $page = 1, int $limit = 5): array
+    public function findProducts(?string $category, ?int $priceLessThan, ?int $page = 1, ?int $limit = 5): array
     {
         $qb = $this->entityManager->createQueryBuilder();
 
