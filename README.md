@@ -1,51 +1,34 @@
-# Symfony Docker
+# Product API Demo
 
-A [Docker](https://www.docker.com/)-based installer and runtime for the [Symfony](https://symfony.com) web framework,
-with [FrankenPHP](https://frankenphp.dev) and [Caddy](https://caddyserver.com/) inside!
-
-![CI](https://github.com/dunglas/symfony-docker/workflows/CI/badge.svg)
+A [Docker](https://www.docker.com/)-based  [Symfony](https://symfony.com) with an API to filter a list of products,
+with [FrankenPHP](https://frankenphp.dev) and [Caddy](https://caddyserver.com/) inside
 
 ## Getting Started
 
 1. If not already done, [install Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)
 2. Run `docker compose build --no-cache` to build fresh images
-3. Run `docker compose up --pull always -d --wait` to set up and start a fresh Symfony project
-4. Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
+3. Run `docker compose up --pull always -d --wait` to set up and start a fresh Symfony project. The database will be filled with some demo data using symfony fixtures.
+4. Open `https://localhost/products?category=boots` in POSTMAN or any other API client to see the API in action
 5. Run `docker compose down --remove-orphans` to stop the Docker containers.
 
-## Features
+# Tools Inside
 
-* Production, development and CI ready
-* Just 1 service by default
-* Blazing-fast performance thanks to [the worker mode of FrankenPHP](https://github.com/dunglas/frankenphp/blob/main/docs/worker.md) (automatically enabled in prod mode)
-* [Installation of extra Docker Compose services](docs/extra-services.md) with Symfony Flex
-* Automatic HTTPS (in dev and prod)
-* HTTP/3 and [Early Hints](https://symfony.com/blog/new-in-symfony-6-3-early-hints) support
-* Real-time messaging thanks to a built-in [Mercure hub](https://symfony.com/doc/current/mercure.html)
-* [Vulcain](https://vulcain.rocks) support
-* Native [XDebug](docs/xdebug.md) integration
-* Super-readable configuration
+* PHPUnit: run `php bin/phpunit` to run unit tests. Tests inclue all business logic in all layers
+* PHPStan: run `php bin/phpstan analyse src --level=8` to run static analysis. It's up to level 8 clear
+* SWAGGER: you can access the API documentation at `/docs/swagger/product.yaml`
 
-**Enjoy!**
+# Choices
 
-## Docs
+* Clean Architecture: The project is organized in layers, with a clear separation of concerns.
+* Money library: handling money is a serious matter in any company, and php may not be the best language to handle it. So I used the Money library to handle money operations. To avoid coupling it to the Product domain I used hexagonal architecture to wrap it into an adapter.
+* Doctrine DBAL: I used Doctrine DBAL to handle the database operations. It's a good compromise between raw SQL and ORM, and it's significantly faster than ORM. Additionally, we avoid having to configure eager or lazy loading that could impact performance by retrieving unnecessary data in specific cases of use.
+* Data Modeling: While the document stated that the product model had a specific structure containing a price object, I stored on the DB a simpler version of it to facilitate operations with DBAL and avoid the use of ORM. I queried the results in a single QUERY and showed the expected structure in the presentation layer using a toArray function. Ideally, this could be performed by a CQRS system.
 
-1. [Options available](docs/options.md)
-2. [Using Symfony Docker with an existing project](docs/existing-project.md)
-3. [Support for extra services](docs/extra-services.md)
-4. [Deploying in production](docs/production.md)
-5. [Debugging with Xdebug](docs/xdebug.md)
-6. [TLS Certificates](docs/tls.md)
-7. [Using MySQL instead of PostgreSQL](docs/mysql.md)
-8. [Using Alpine Linux instead of Debian](docs/alpine.md)
-9. [Using a Makefile](docs/makefile.md)
-10. [Updating the template](docs/updating.md)
-11. [Troubleshooting](docs/troubleshooting.md)
+# Assumptions:
 
-## License
-
-Symfony Docker is available under the MIT License.
+* According to the task description: "this list could grow to have 20.000 products.". I added pagination to avoid getting long result sets that could saturate memory.
+* According to the task description: "(optional) Can be filtered by priceLessThan" since the category filter doesn't have the optional tag I will assume its mandatory.
 
 ## Credits
 
-Created by [Kévin Dunglas](https://dunglas.dev), co-maintained by [Maxime Helias](https://twitter.com/maxhelias) and sponsored by [Les-Tilleuls.coop](https://les-tilleuls.coop).
+The Original docker project was created by [Kévin Dunglas](https://dunglas.dev), co-maintained by [Maxime Helias](https://twitter.com/maxhelias) and sponsored by [Les-Tilleuls.coop](https://les-tilleuls.coop).
