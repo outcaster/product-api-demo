@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Application\Service;
 
@@ -10,7 +12,8 @@ class ProductListApplicationService
 {
     public function __construct(
         private ProductRepositoryInterface $productRepository
-    ) {}
+    ) {
+    }
 
     /**
      * @return array<Product>

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Infrastructure\Repository;
 
@@ -10,7 +12,8 @@ readonly class DoctrineProductRepository implements ProductRepositoryInterface
 {
     public function __construct(
         private EntityManagerInterface $entityManager
-    ) {}
+    ) {
+    }
 
     /**
      * @return Product[]
@@ -21,7 +24,8 @@ readonly class DoctrineProductRepository implements ProductRepositoryInterface
 
         $qb->select('p', 'COALESCE(MAX(d.percentage), 0) as discount_percentage')
             ->from(Product::class, 'p')
-            ->leftJoin('App\Domain\Entity\Discount',
+            ->leftJoin(
+                'App\Domain\Entity\Discount',
                 'd',
                 'WITH',
                 'p.category = d.category OR p.sku = d.sku'

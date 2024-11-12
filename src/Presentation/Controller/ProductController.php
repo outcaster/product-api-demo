@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Presentation\Controller;
 
@@ -18,7 +20,8 @@ class ProductController extends AbstractController
     public function __construct(
         private readonly ProductListApplicationService $productListApplicationService,
         private readonly ProductQueryAdapter $productQueryAdapter,
-    ) {}
+    ) {
+    }
 
     #[Route('/products', name: 'product_list', methods: ['GET'])]
     public function __invoke(Request $request): Response
@@ -28,7 +31,7 @@ class ProductController extends AbstractController
         $products = ($this->productListApplicationService)($productQuery);
 
         return $this->json(
-            array_map(fn($product) => $product->toArray(new MoneyAdapter()), $products)
+            array_map(fn ($product) => $product->toArray(new MoneyAdapter()), $products)
         );
     }
 }

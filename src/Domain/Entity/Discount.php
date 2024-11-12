@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
@@ -9,7 +11,8 @@ class Discount
         private string $sku,
         private string $category,
         private int    $percentage,
-    ){}
+    ) {
+    }
 
     public function getId(): int
     {

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
@@ -14,7 +16,8 @@ class Product
         private string                  $category,
         private int                     $price,
         private int                     $discountPercentage = 0,
-    ){}
+    ) {
+    }
 
     public function getSku(): string
     {

@@ -11,7 +11,8 @@ class ProductQueryAdapter
 {
     public function __construct(
         private QueryValidator $queryValidator
-    ) {}
+    ) {
+    }
 
     public function getProductQuery(Request $request): ProductQuery
     {

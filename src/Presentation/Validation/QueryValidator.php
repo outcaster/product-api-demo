@@ -10,7 +10,8 @@ class QueryValidator
 {
     public function __construct(
         private ValidatorInterface $validator
-    ) {}
+    ) {
+    }
 
     public function validateProductQuery(ProductQuery $productQuery): void
     {
