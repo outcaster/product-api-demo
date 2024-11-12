@@ -37,7 +37,7 @@ readonly class DoctrineProductRepository implements ProductRepositoryInterface
             $qb->andWhere('p.price <= :priceLessThan')
                 ->setParameter('priceLessThan', $priceLessThan);
         }
-        
+
         $qb->orderBy('p.price', 'ASC')
             ->setMaxResults($limit)
             ->setFirstResult(($page - 1) * $limit);

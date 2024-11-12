@@ -1,0 +1,10 @@
+App\Application\Query\ProductQuery:
+    properties:
+        priceLessThan:
+            - Positive: ~
+        page:
+            - Positive: ~
+        limit:
+            - Range:
+                min: 1
+                max: 5
