@@ -8,9 +8,9 @@ class Discount
 {
     public function __construct(
         private int $id,
-        private string $sku,
-        private string $category,
-        private int    $percentage,
+        private int $percentage,
+        private ?string $sku = null,
+        private ?string $category = null,
     ) {
     }
 

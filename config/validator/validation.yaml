@@ -1,5 +1,7 @@
 App\Application\Query\ProductQuery:
     properties:
+        category:
+            - NotBlank: ~
         priceLessThan:
             - Positive: ~
         page:
