@@ -1,46 +1,82 @@
 <?php declare(strict_types=1);
 
-namespace App\Presentation\Listener;
+namespace App\Tests\Presentation\Listener;
 
-use App\Infrastructure\Exception\ValidationException;
+use App\Presentation\Listener\JsonExceptionListener;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class JsonExceptionListener
+class JsonExceptionListenerTest extends TestCase
 {
-    private string $environment;
+    private JsonExceptionListener $listener;
     private LoggerInterface $logger;
 
-    public function __construct(string $environment, LoggerInterface $logger)
+    protected function setUp(): void
     {
-        $this->environment = $environment;
-        $this->logger = $logger;
+        $this->logger = $this->createMock(LoggerInterface::class);
     }
 
-    public function onKernelException(ExceptionEvent $event): void
+    public function testOnKernelExceptionInProdEnvironment(): void
     {
-        $exception = $event->getThrowable();
-        $response = new JsonResponse();
-        $statusCode = 500;
-        $error = ['message' => 'Internal Server Error', 'code' => $statusCode];
+        $this->listener = new JsonExceptionListener('prod', $this->logger);
+        $exception = new \Exception('Test exception');
+        $event = $this->createExceptionEvent($exception);
 
-        if ($exception instanceof HttpExceptionInterface) {
-            $statusCode = $exception->getStatusCode();
-            $error = ['message' => $exception->getMessage(), 'code' => $statusCode];
-        } elseif ($exception instanceof ValidationException) {
-            $statusCode = 400;
-            $error = [
-                'message' => 'Validation failed',
-                'code' => $statusCode,
-                'details' => $exception->getErrors()
-            ];
-        }
+        $this->listener->onKernelException($event);
 
-        $response->setData(['error' => $error]);
-        $response->setStatusCode($statusCode);
+        $response = $event->getResponse();
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(JsonResponse::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
+        $this->assertJsonStringEqualsJsonString(
+            json_encode(['error' => ['message' => 'An error occurred', 'code' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR]]),
+            $response->getContent()
+        );
+    }
 
-        $event->setResponse($response);
+    public function testOnKernelExceptionInNonProdEnvironment(): void
+    {
+        $this->listener = new JsonExceptionListener('dev', $this->logger);
+        $exception = new \Exception('Test exception');
+        $event = $this->createExceptionEvent($exception);
+
+        $this->listener->onKernelException($event);
+
+        $response = $event->getResponse();
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(JsonResponse::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
+        $this->assertJsonStringEqualsJsonString(
+            json_encode(['error' => ['message' => 'Test exception', 'code' => JsonResponse::HTTP_INTERNAL_SERVER_ERROR]]),
+            $response->getContent()
+        );
+    }
+
+    public function testOnKernelExceptionWithHttpException(): void
+    {
+        $this->listener = new JsonExceptionListener('dev', $this->logger);
+        $exception = new HttpException(JsonResponse::HTTP_BAD_REQUEST, 'Bad request');
+        $event = $this->createExceptionEvent($exception);
+
+        $this->listener->onKernelException($event);
+
+        $response = $event->getResponse();
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(JsonResponse::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertJsonStringEqualsJsonString(
+            json_encode(['error' => ['message' => 'Bad request', 'code' => JsonResponse::HTTP_BAD_REQUEST]]),
+            $response->getContent()
+        );
+    }
+
+    private function createExceptionEvent(\Throwable $exception): ExceptionEvent
+    {
+        $kernel = $this->createMock(HttpKernelInterface::class);
+        $request = $this->createMock(Request::class);
+
+        return new ExceptionEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $exception);
     }
 }
