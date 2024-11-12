@@ -23,6 +23,7 @@ with [FrankenPHP](https://frankenphp.dev) and [Caddy](https://caddyserver.com/) 
 * Money library: handling money is a serious matter in any company, and php may not be the best language to handle it. So I used the Money library to handle money operations. To avoid coupling it to the Product domain I used hexagonal architecture to wrap it into an adapter.
 * Doctrine DBAL: I used Doctrine DBAL to handle the database operations. It's a good compromise between raw SQL and ORM, and it's significantly faster than ORM. Additionally, we avoid having to configure eager or lazy loading that could impact performance by retrieving unnecessary data in specific cases of use.
 * Data Modeling: While the document stated that the product model had a specific structure containing a price object, I stored on the DB a simpler version of it to facilitate operations with DBAL and avoid the use of ORM. I queried the results in a single QUERY and showed the expected structure in the presentation layer using a toArray function. Ideally, this could be performed by a CQRS system.
+* DataFixtures location is following symfony best practices. However many people could complain about this, so changing to the src directory could be a choice
 
 # Assumptions:
 
