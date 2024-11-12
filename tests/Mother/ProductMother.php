@@ -17,9 +17,9 @@ class ProductMother
         }
 
         return new Product(
-            self::$faker->unique()->ean13,
-            self::$faker->word,
-            self::$faker->word,
+            self::$faker->unique()->ean13(),
+            self::$faker->word(),
+            self::$faker->word(),
             self::$faker->numberBetween(1000, 10000),
             self::$faker->numberBetween(0, 50)
         );

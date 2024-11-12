@@ -7,6 +7,7 @@ use App\Application\Service\ProductListApplicationService;
 use App\Presentation\Adapter\ProductQueryAdapter;
 use App\Presentation\Controller\ProductController;
 use App\Tests\Mother\ProductMother;
+use Faker\Generator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +19,8 @@ class ProductControllerTest extends TestCase
     private ProductListApplicationService $productListApplicationService;
     private ProductQueryAdapter $productQueryAdapter;
     private ProductController $productController;
-    private \Faker\Generator $faker;
+    private Generator $faker;
+    private ContainerInterface $container;
 
     protected function setUp(): void
     {
