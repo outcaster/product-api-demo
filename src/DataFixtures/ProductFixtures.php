@@ -41,6 +41,12 @@ class ProductFixtures extends Fixture
                 'category' => 'sneakers',
                 'price' => 59000,
             ],
+            [
+                'sku' => '000006',
+                'name' => 'Nathane ankle sneakers',
+                'category' => 'sneakers',
+                'price' => 69000,
+            ],
         ];
 
         foreach ($products as $productData) {
